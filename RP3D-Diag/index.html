@@ -163,7 +163,7 @@
   }
 </style>
 
-	<title>K-Diag: Knowledge-enhanced Disease Diagnosis in Radiographic Imaging</title>
+	<title>Large-scale Long-tailed Disease Diagnosis on Radiology Images</title>
 </head>
 
 <body>
@@ -177,12 +177,22 @@
             <tbody><tr>
                     <td align="center" width="180px">
               <center>
+                <span style="font-size:16px"><a href="https://qiaoyu-zheng.github.io/">Qiaoyu Zheng<sup>*</sup></a><sup>1,2</sup></span>
+                </center>
+                </td>
+                    <td align="center" width="180px">
+              <center>
+                <span style="font-size:16px"><a href="https://github.com/Angelakeke/">Weike Zhao<sup>*</sup></a><sup>1,2</sup></span>
+                </center>
+                </td>
+                    <td align="center" width="180px">
+              <center>
                 <span style="font-size:16px"><a href="https://chaoyi-wu.github.io/">Chaoyi Wu<sup>*</sup></a><sup>1,2</sup></span>
                 </center>
                 </td>
                     <td align="center" width="180px">
               <center>
-                <span style="font-size:16px"><a href="https://xiaoman-zhang.github.io/">Xiaoman Zhang<sup>*</sup></a><sup>1,2</sup></span>
+                <span style="font-size:16px"><a href="https://xiaoman-zhang.github.io/">Xiaoman Zhang</a><sup>1,2</sup></span>
                 </center>
                 </td>
                     <td align="center" width="180px">
@@ -226,16 +236,7 @@
                 </center>
                 </td>
         </tr></tbody></table>
-        <table align="center" width="700px">
-          <td align="center" width="200px">
-            <center>
-              <br>
-              <span style="font-size:18px">
-                Accepted by MICCAI-BTSD2023 (Workshop Oral)
-              </span>
-            </center>
-          </td>
-      </table>
+        
 
 	<table align="center" width="700px">
             <tbody><tr>
@@ -243,7 +244,7 @@
                 <center>
                   <br>
                   <span style="font-size:20px">Code
-                    <a href="https://github.com/MediaBrain-SJTU/K-Diag"> [GitHub]</a>
+                    <a href="https://github.com/qiaoyu-zheng/RP3D-Diag"> [GitHub]</a>
                   </span>
                 </center>
               </td>
@@ -261,7 +262,7 @@
                 <center>
                   <br>
                   <span style="font-size:20px">
-                    Cite <a href="./cite.txt"> [BibTeX]</a>
+                    Paper <a href="https://arxiv.org/abs/2312.16151"> [arXiv]</a>
                   </span>
                 </center>
               </td>
@@ -287,103 +288,14 @@
       <center><h2> Abstract </h2> </center>
       <p style="text-align:justify; text-justify:inter-ideograph;">
             <left>
-              In this paper, we consider the problem of disease diagnosis. 
-              Unlike the conventional learning paradigm that treats labels independently, we propose a knowledge-enhanced framework, that enables training visual representation with the guidance of medical domain knowledge. 
-              In particular, we make the following contributions: 
-              First, to explicitly incorporate experts' knowledge, we propose to learn a neural representation for the medical knowledge graph via contrastive learning, implicitly establishing relations between different medical concepts. 
-              Second, while training the visual encoder, we keep the parameters of the knowledge encoder frozen and propose to learn a set of prompt vectors for efficient adaptation. 
-              Third, we adopt a Transformer-based disease-query module for cross-model fusion, which naturally enables explainable diagnosis results via cross attention. 
-              To validate the effectiveness of our proposed framework, we conduct thorough experiments on three x-ray imaging datasets across different anatomy structures, showing our model is able to exploit the implicit relations between diseases/findings, thus is beneficial to the commonly encountered problem in the medical domain, namely, long-tailed and zero-shot recognition, which conventional methods either struggle or completely fail to realize.
-            </left></p>
-          <p><img style="width:800px" src='./resources/teaser.png'></p>
+              In this study, we aim to investigate the problem of large-scale, large-vocabulary disease classification for radiologic images, which can be formulated as a multi-modal, 
+              multi-anatomy, multi-label, long-tailed classification. Our main contributions are three folds: (i), on dataset construction, we build up an academically accessible, large-scale 
+              diagnostic dataset that encompasses 5568 disorders linked with 930 unique ICD-10-CM codes, containing 39,026 cases (192,675 scans). (ii), on model design, we present a novel 
+              architecture that enables to process arbitrary number of input scans, from various imaging modalities, which is trained with knowledge enhancement to leverage the rich domain knowledge; 
+              (iii), on evaluation, we initialize a new benchmark for multi-modal multi-anatomy long-tailed diagnosis. Our method shows superior results on it. Additionally, our final model serves as 
+              a pre-trained model, and can be finetuned to benefit diagnosis on various external datasets. </left></p>
+          <p><img style="width:800px" src='./resources/Intro.png'></p>
       </div>
-      <br><hr>
-      <center> <h2> Architecture </h2> </center>
-      <p style="text-align:justify; text-justify:inter-ideograph;"><left>
-        Overview of the knowledge-enhanced disease diagnosis workflow. 
-        The <i>knowledge encoder (left)</i> is first trained to learn a neural representation of the medical knowledge graph via contrastive learning, 
-        and then used to guide the visual representation learning in our <i>knowledge-enhanced classification model (right)</i>.
-        While training the visual encoder, we keep the parameters of the knowledge encoder frozen and propose to learn a set of prompt vectors for efficient adaptation.
-        Finally we adopt a Transformer-based disease-query module for cross-model fusion, which naturally enables explainable diagnosis results via cross attention.
-        
-	</left></p>
-        <p><img class="left"  src="./resources/Method.png" width="800px"></p>
-      
-      <br>
-      <hr>
-      <center><h2>Quantitative Results</h2></center>
-      <p><b>R1: Analysis of Knowledge-Enhanced Classification Model </b> </p>
-      <p><left>
-        <i>Comparison to Conventional Training Scheme.</i> 
-          Compare with Baseline Models with ResNet-50 and ViT-16 as backbone on disease classification tasks. 
-          KE indicates the proposed knowledge encoder, LP indicates the proposed learnable prompt module, and the number denotes the prompt number. 
-          AUC scores averaged across different diseases are reported. 
-          Our knowledge-enhanced model achieves a higher average AUC on all datasets across different architectures.
-      </left></p>
-      <p><img class="center"  src="./resources/table1.png" width="800px"></p>
-      
-      <div class="container">
-        <div class="image" width="550px">
-          <center><p><img class="center"  src="./resources/table4.png" width="500px"></p></center>
-	      </div>
-        <div class="text" width="250px"> 
-          <p> Compare with Baseline Models on VinDr-Mammo Task. AUC scores are reported. 
-            Detail results for each diseases are shown in the table to explain that, on VinDr-Mammo, LP sometimes may have a lower scores mainly because of some classes with extremly few cases.
-          </p>
-        </div>
-      </div>
-      <p><b>R2: Analysis of the Knowledge-Enhanced Text Encoder </b> </p>	
-      <p> Ablation study on knowledge encoder with ResNet as a backbone, we use the optimal prompt numbers according to the ablation study, 
-        i.e., 32 for VinDr-PCXR, 128 for VinDr-Mammo, and 64 for VinDr-SpineXr.
-        we can make two observations: <i>(i)</i> guiding visual representation learning with domain knowledge
-        generally works better, e.g., results of using ClinicalBERT or PubMedBERT outperform
-        conventional training with discrete labels, <i>(ii)</i> our proposed knowledge-enhanced text
-        encoder consistently demonstrates superior results, that can be attributed to the explicitly
-        injected domain knowledge, rather than implicitly learning it from the document corpus.
-          </p>
-			<img style="width:800px" src='./resources/table2.png'></img>
-			
-      
-        
-      <p><b>R3: Analysis on the CXR-Mix</b></p>
-      <p> <b>The Ability to Combine Various Partial-labeled Datasets:</b>
-        Compare with Baseline Models on disease classification tasks on the assembling dataset.
-        AvgAUC refers to the AUC score averaged across different diseases. The first line refers to the use
-        of the training flow proposed by TorchXrayVision and use ResNet or ViT as the backbone.
-        Unlike the traditional approach, which requires to carefully merging the label space from different datasets
-        to benefit from them, our formulation of embedding the 'disease name' with a knowledge
-        encoder naturally enables us to train models on the mixture of multiple datasets, 
-        handling different granularities of diagnosis targets and inconsistent pathology expression.
-          </p>
-      <center><p><img class="center"  src="./resources/table3.png" width="750px"></p></center>
-      <p> <b>The Ability to Leverage Class Diversity:</b> 
-        Analyse the performance gain on the assembling dataset. "Seperation" refers to using a
-        single dataset to train our framework. "+Diversity" refers to adding the cases beyond the target
-        classes, increasing the class diversity, and keeping the data amount of the target classes constant.
-        "+Diversity+Amount" means directly mixing the 11 datasets and for most datasets, the data
-        amount of the target classes will further increase.
-          </p>
-      <center><p><img class="center"  src="./resources/barplot.png" width="800px"></p></center>
-      
-      <p> <b>The Ability to Diagnose Open-set Unseen Diseases:</b> 
-        AUC and 95% CI are shown on the unseen classes under the zero-shot setting. n represents
-        the number of related cases. Generally, our method achieves an AUC of at least 0.800 on 14
-        findings, at least 0.700 on 45 findings and at least 0.600 on 79 findings out of 106 radiographic findings where n > 50 in the
-        PadChest test dataset (n = 39, 053).
-          </p>
-      <center><p><img class="center"  src="./resources/padchest.png" width="800px"></p></center>
-
-      <br>
-      <hr>
-
-      <center><h2>Visualizations of Zero-shot Grounding </h2></center>
-      <!-- <p><b>2D Visualization </b> </p> -->
-      <p><left>
-        We average the cross-attention map in each transformer layer in the disease query module, 
-        and visualize the results in Figure. The model's attention well matches radiologists'
-        diagnoses of different diseases, i.e. red boxes labeled by radiologists.
-      </left></p>
-      <p><img class="center"  src="./resources/visualize.png" width="800px"></p>
       <br>
       <hr>
       <center> <h2> Acknowledgements </h2> </center>
