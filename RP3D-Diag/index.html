@@ -161,6 +161,19 @@
     height: 1px;
     background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
   }
+
+  .right-align {
+    text-align: right;
+  }
+
+  figure {
+    text-align: center;
+  }
+
+  figcaption {
+    font-style: italic;
+    margin-top: 5px;
+  }
 </style>
 
 	<title>Large-scale Long-tailed Disease Diagnosis on Radiology Images</title>
@@ -173,7 +186,7 @@
 	</center>
   </table>
   
-	<table align="center" width="700px">
+	<table align="center" width="650px">
             <tbody><tr>
                     <td align="center" width="160px">
               <center>
@@ -214,7 +227,7 @@
               </td>
                     <td align="center" width="300px">
               <center>
-                <span style="font-size:16px"><a href="https://mediabrain.sjtu.edu.cn/">Yanfeng Wang</a><sup>1,2</sup></span>
+                <span style="font-size:16px"><a href="https://mediabrain.sjtu.edu.cn/">Yanfeng Wang</a><sup>1,2,<img class="round" style="width:20px" src="./resources/corresponding_fig.png"></sup></span>
                 </center>
               </td>
               <td align="center" width="300px">
@@ -273,25 +286,19 @@
                   </span>
                 </center>
               </td>
+
+              <td align="center" width="240px">
+                <center>
+                  <br>
+                  <span style="font-size:20px">
+                    Dataset <a href="https://arxiv.org/abs/2312.16151"> [HuggingFace]</a>
+                  </span>
+                </center>
+              </td>
             </tr></tbody>
       </table>
+     
       <br><hr>
-      <!-- <center><h2> Abstract </h2> </center>
-      <p style="text-align:justify; text-justify:inter-ideograph;">
-      <left>
-        In this paper, we consider the problem of enhancing self-supervised visual-language pre-training~(VLP) with medical-specific knowledge, 
-        by exploiting the paired image-text reports from the radiological daily practice.
-        In particular, we make the following contributions:
-        <i>First</i>, unlike existing works that directly process the raw reports,
-        we adopt a novel report pre-processing mechanism by simply extracting the useful medical entities, avoiding unnecessary complexity from understanding the language grammar;
-        <i>Second</i>, we propose a novel entity embedding module by querying an external knowledge description base, to exploit the rich context of additional information that the medical domain affords, and implicitly build relationships between entities in the language embedding space;
-        <i> Third</i>, we propose a novel Transformer-based fusion model for spatially aligning the entity description with visual signals at the image patch level only with self-supervised learning, thus enabling the ability for spatial grounding;
-        <i> Fourth</i>, we conduct thorough experiments to validate the effectiveness of our proposed architecture, and benchmark on numerous public benchmarks {\em e.g.}, ChestX-ray14, 
-        RSNA Pneumonia, SIIM-ACR Pneumothorax, COVIDx CXR-2, COVID Rural, and EdemaSeverity. 
-        In both zero-shot and fine-tuning settings, our model has demonstrated strong performance compared with the former methods on disease classification and grounding.
-      </center></p>
-      <p><img class="center"  src="./resources/Method.png" width="800px"></p> -->
-
       <center><h2> Abstract </h2> </center>
       <p style="text-align:justify; text-justify:inter-ideograph;">
             <left>
@@ -301,14 +308,128 @@
               architecture that enables to process arbitrary number of input scans, from various imaging modalities, which is trained with knowledge enhancement to leverage the rich domain knowledge; 
               (iii), on evaluation, we initialize a new benchmark for multi-modal multi-anatomy long-tailed diagnosis. Our method shows superior results on it. Additionally, our final model serves as 
               a pre-trained model, and can be finetuned to benefit diagnosis on various external datasets. </left></p>
-          <p><img style="width:800px" src='./resources/Intro.jpg'></p>
+             
       </div>
       <br>
+
       <hr>
-      <center> <h2> Acknowledgements </h2> </center>
-      <p> 
-	      Based on a template by <a href="http://web.mit.edu/phillipi/">Phillip Isola</a> and <a href="http://richzhang.github.io/">Richard Zhang</a>.
+      <center> <h2> The RP3D-DiagDS Dataset </h2> </center>
+
+ <p><img style="width:800px" src='./resources/fig1.png'></p>
+      <p>
+Overall, the proposed dataset contains 39,026 cases, 
+of 192,675 images from 9 diverse imaging modalities and 7 human anatomy regions, 
+note that, each case may contain images of multiple scans. 
+The data covers 5,568 different disorders, that have been manually mapped into 930 <a href="https://www.icd10data.com/ICD10CM/Codes">ICD-10-CM</a> codes. 
       </p>
+ <!-- <center><p><img style="width:500px" src='./resources/fig2.png'></p></center> -->
+      <p>
+        Specifically, cases in our dataset are sourced from the <a href="https://radiopaedia.org/search?scope=cases">Radiopaedia website</a>
+        -- a growing peer-reviewed educational radiology resource website, that allows the clinicians to upload 3D volumes to better reflect real clinical scenarios. 
+        Additionally, all privacy issues have already been resolved by the clinicians at uploading time. 
+      </p>
+      <center><p><img style="width:600px" src='./resources/fig3.png'></p></center>
+
+      <p>
+        For each cases in <a href="https://radiopaedia.org/search?scope=cases">Radiopaedia</a>, 'Related Radiopaedia articles' contains links to related articles named with corresponding disorders for radiology images, 
+        which are treated as diagnosis labels and have been meticulously peer-reviewed by experts in Radiopaedia Editorial Board.
+        After article filtering, manual mapping and normal cases adding, we get 39,026 cases containing 192,675 images labeled by 5,568 disorder classes and 930 ICD-10-CM classes.
+        We will continually maintain the dataset, growing the case number.
+      </p>
+
+      <p style="font-weight: bold; font-size: large;">
+	      Analysis of the Cases in RP3D-DiagDS dataset
+      </p>
+        
+      <p> 
+	      RP3D-DiagDS comprises images from 9 modalities, namely, 
+        <strong>computed tomography (CT)</strong>, <strong>magnetic resonance imaging (MRI)</strong>, 
+        <strong>X-ray</strong>, <strong>Ultrasound</strong>, <strong>Fluoroscopy</strong>, <strong>Nuclear medicine</strong>, <strong>Mammography</strong>, 
+        <strong>DSA (angiography)</strong>, and <strong>Barium Enema</strong>. Each case may include images from multiple modalities, to ensure precise and comprehensive diagnosis of disorders. 
+        Overall, approximately 19.4% of the cases comprise images from two modalities, while around 2.9% involve images from three to five modalities. 
+        The remaining cases are associated with image scans from a single modality. 
+      </p>
+      <p><img style="width:800px" src='./resources/modality_good1.png'></p>
+      <!-- <iframe src="./resources/modality_good1.pdf" width="800px" height="100%"></iframe> -->
+      <!-- <embed src="./resources/modality_good1.pdf" type="application/pdf" width="100%" height="600px" /> -->
+      <p> 
+	      RP3D-DiagDS comprises images from various anatomical regions, including <strong>head and neck</strong>, <strong>spine</strong>, <strong>chest</strong>, <strong>breast</strong>, 
+        <strong>abdomen and pelvis</strong>, <strong>upper limb</strong>, and <strong>lower limb</strong>, providing comprehensive coverage of the entire human body. 
+      </p>
+      <p><img style="width:800px" src='./resources/anatomy_good.png'></p>
+      
+      <p>
+        For both disorder and disease classification, each case can correspond to multiple disorders, 
+        resulting in RP3D-DiagDS a long-tailed, multi-label classification dataset. 
+        We define the `head class' category with case counts greater than 100, the `body class' category with case counts between 30 and 100, 
+        and the `tail class' category with case counts less than 30.
+      </p>
+      <center><p><img style="width:600px" src='./resources/fig4.png'></p></center>
+
+      <br>
+
+      <hr>
+      <center> <h2> Architecture </h2> </center>
+      <p>
+      <figure>
+        <img style="width:700px" src='./resources/architecture_2.png'>
+        <figcaption>The architecture of our proposed visual encoder and fusion module, together with the knowledge enhancement strategy. (a) shows the details of the vision encoder. We design two variants to fit in the two main visual backbones, i.e., ResNet and ViT. (b) shows the transformer-based fusion module, enabling case-level information fusion. (c) shows the knowledge enhancement strategy. We first pre-train a text encoder with extra medical knowledge with contrastive learning, i.e., synonyms, descriptions and hierarchy, termed as knowledge encoder and then we view the text embedding as a natural classifier to guide the diagnosis classification.</figcaption>
+      </figure>
+    </p>
+
+    <br>
+
+    <hr>
+    <center> <h2> Results </h2> </center>
+
+    <p style="font-weight: bold; font-size: large;">
+      R1: Classification results on Disorders and ICD-10-CM levels. 
+    </p>
+    <p><img style="width:700px" src='./resources/table1.jpeg'></p>
+    <p>
+      In the table ``FM'' represents the fusion module and ``KE'' represents the knowledge enhancement strategy. We report the results on Head/Medium/Tail class sets separately.
+    </p>
+    <!-- <br> -->
+    <p style="font-weight: bold; font-size: large;">
+      R2: ROC curves on Disorders and ICD-10-CM.
+    </p>
+    <p><img style="width:700px" src='./resources/table2.jpeg'></p>
+    <p>
+      As depicts in ROC curves above, the shadow in the figure shown the 95% CI (Confidence interval) and FM, KE are short for Fusion Module and Knowledge Enhancement.
+    </p>
+
+    <!-- <br> -->
+    <p style="font-weight: bold; font-size: large;">
+      R3: The AUC Score Comparison on Various External Datasets.
+    </p>
+    <p><img style="width:700px" src='./resources/table3.jpeg'></p>
+    <p>
+      For each dataset, we carry out experiments with different training data portions, denoted as 1% to 100% in the table. 
+      For example, 30% represents we use 30% of data in the downstream training set for finetuning our model or training from scratch. 
+      ``SOTA'' denotes the best performance of former works (pointed with corresponding reference) on the datasets and 
+      ``Zero-shot'' denotes directly evaluate our model on external datasets. 
+      We mark the gap between ours and training from screatch on the subscript of uparrows in the table.
+    </p>
+
+    <p>For more detailed ablation studies and results, please refer to our <a href="https://arxiv.org/abs/2312.16151"> paper</a>.</p>
+
+    <br>
+      <hr>
+      <center><h2>BibTeX</h2></center>
+      <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+  @inproceedings{Zheng2023LargescaleLD,
+  title={Large-scale Long-tailed Disease Diagnosis on Radiology Images},
+  author={Qiaoyu Zheng and Weike Zhao and Chaoyi Wu and Xiaoman Zhang and Ya Zhang and Yanfeng Wang
+  and Weidi Xie},
+  year={2023},
+  url={https://api.semanticscholar.org/CorpusID:266551527}
+  }
+              </code>
+          </pre>
+        </div>      
+      </div>
+
+      
       <br>
 <br>
 </body>
