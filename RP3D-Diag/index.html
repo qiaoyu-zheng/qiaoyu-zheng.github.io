@@ -302,12 +302,17 @@
       <center><h2> Abstract </h2> </center>
       <p style="text-align:justify; text-justify:inter-ideograph;">
             <left>
-              In this study, we aim to investigate the problem of large-scale, large-vocabulary disease classification for radiologic images, which can be formulated as a multi-modal, 
-              multi-anatomy, multi-label, long-tailed classification. Our main contributions are three folds: (i), on dataset construction, we build up an academically accessible, large-scale 
-              diagnostic dataset that encompasses 5568 disorders linked with 930 unique ICD-10-CM codes, containing 39,026 cases (192,675 scans). (ii), on model design, we present a novel 
-              architecture that enables to process arbitrary number of input scans, from various imaging modalities, which is trained with knowledge enhancement to leverage the rich domain knowledge; 
-              (iii), on evaluation, we initialize a new benchmark for multi-modal multi-anatomy long-tailed diagnosis. Our method shows superior results on it. Additionally, our final model serves as 
-              a pre-trained model, and can be finetuned to benefit diagnosis on various external datasets. </left></p>
+              Developing a generalist radiology diagnosis system can greatly enhance clinical diagnostics. In this paper,
+              we introduce RadDiag, a foundational model supporting 2D and 3D inputs across various modalities and
+              anatomies, using a transformer-based fusion module for comprehensive disease diagnosis. Due to patient
+              privacy concerns and the lack of large-scale radiology diagnosis datasets, we utilize high-quality, clinician-
+              reviewed radiological images available online with diagnosis labels. Our dataset, RP3D-DiagDS, contains
+              40,936 cases with 195,010 scans covering 5,568 disorders (930 unique ICD-10-CM codes). Experimentally,
+              our RadDiag achieves 95.14% AUC on internal evaluation with the knowledge-enhancement strategy.
+              Additionally, RadDiag can be zero-shot applied or fine-tuned to external diagnosis datasets sourced from
+              various hospitals, demonstrating state-of-the-art results. In conclusion, we show that publicly shared
+              medical data on the Internet is a tremendous and valuable resource that can potentially support building a
+              generalist AI for healthcare. </left></p>
              
       </div>
       <br>
