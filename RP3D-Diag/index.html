@@ -382,7 +382,12 @@ The data covers 5,568 different disorders, that have been manually mapped into 9
       <p>
       <figure>
         <img style="width:700px" src='./resources/RP3D-DiagModel.png'>
-        <figcaption>The architecture of our proposed visual encoder and fusion module, together with the knowledge enhancement strategy. (a) shows the details of the vision encoder. We design two variants to fit in the two main visual backbones, i.e., ResNet and ViT. (b) shows the transformer-based fusion module, enabling case-level information fusion. (c) shows the knowledge enhancement strategy. We first pre-train a text encoder with extra medical knowledge with contrastive learning, i.e., synonyms, descriptions and hierarchy, termed as knowledge encoder and then we view the text embedding as a natural classifier to guide the diagnosis classification.</figcaption>
+        <figcaption>The overview of our method. Three parts demonstrate our proposed visual encoders and fusion module, together
+          with the knowledge enhancement strategy respectively. a The three types of vision encoder, i.e., ResNet-based, ViT-based , and
+          ResNet-ViT-mixing. b The architecture of the fusion module. The figure shows the transformer-based fusion module, enabling
+          case-level information fusion. c The knowledge enhancement strategy. We first pre-train a text encoder with extra medical
+          knowledge with contrastive learning, leveraging synonyms, descriptions, and hierarchy. Then we view the text embedding as a
+          natural classifier to guide the diagnosis classification.</figcaption>
       </figure>
     </p>
 
