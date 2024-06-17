@@ -333,7 +333,7 @@ The data covers 5,568 different disorders, that have been manually mapped into 9
         -- a growing peer-reviewed educational radiology resource website, that allows the clinicians to upload 3D volumes to better reflect real clinical scenarios. 
         Additionally, all privacy issues have already been resolved by the clinicians at uploading time. 
       </p>
-      <center><p><img style="width:600px" src='./resources/fig3.png'></p></center>
+      <center><p><img style="width:600px" src='./resources/filter_procedure.png'></p></center>
 
       <p>
         For each cases in <a href="https://radiopaedia.org/search?scope=cases">Radiopaedia</a>, 'Related Radiopaedia articles' contains links to related articles named with corresponding disorders for radiology images, 
@@ -356,20 +356,25 @@ The data covers 5,568 different disorders, that have been manually mapped into 9
         Overall, approximately 19.4% of the cases comprise images from two modalities, while around 2.9% involve images from three to five modalities. 
         The remaining cases are associated with image scans from a single modality. 
       </p>
-      <p><img style="width:800px" src='./resources/modality_good.png'></p>
+      <p><img style="width:800px" src='./resources/Distribution_figure.png'></p>
       <!-- <iframe src="./resources/modality_good1.pdf" width="800px" height="100%"></iframe> -->
       <!-- <embed src="./resources/modality_good1.pdf" type="application/pdf" width="100%" height="600px" /> -->
-      <p> 
+      <!-- <p> 
 	      RP3D-DiagDS comprises images from various anatomical regions, including <strong>head and neck</strong>, <strong>spine</strong>, <strong>chest</strong>, <strong>breast</strong>, 
         <strong>abdomen and pelvis</strong>, <strong>upper limb</strong>, and <strong>lower limb</strong>, providing comprehensive coverage of the entire human body. 
       </p>
-      <p><img style="width:800px" src='./resources/anatomy_good.png'></p>
+      <p><img style="width:800px" src='./resources/anatomy_good.png'></p> -->
       
       <p>
-        For both disorder and disease classification, each case can correspond to multiple disorders, 
-        resulting in RP3D-DiagDS a long-tailed, multi-label classification dataset. 
-        We define the `head class' category with case counts greater than 100, the `body class' category with case counts between 30 and 100, 
-        and the `tail class' category with case counts less than 30.
+        RP3D-DiagDS comprises images from 9 modalities, namely, computed
+        tomography (CT), magnetic resonance imaging (MRI), X-ray, Ultrasound, Fluoroscopy, Nuclear medicine,
+        Mammography, DSA (angiography), and Barium Enema.
+        RP3D-DiagDS comprises images from various anatomical regions,
+        including the head and neck, spine, chest, breast, abdomen and pelvis, upper limb, and lower limb, providing
+        comprehensive coverage of the entire human body.
+        Totally there are 5568 disorders mapped into 930 ICD-10-CM
+        classes. We define the “head class” category with case counts greater than 100, the “body class” category with
+        case counts between 30 and 100, and the “tail class” category with case counts less than 30.
       </p>
       <center><p><img style="width:600px" src='./resources/fig4.png'></p></center>
 
