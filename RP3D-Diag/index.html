@@ -399,7 +399,7 @@ The data covers 5,568 different disorders, that have been manually mapped into 9
     <p style="font-weight: bold; font-size: large;">
       R1: Classification results on Disorders and ICD-10-CM levels. 
     </p>
-    <p><center><img style="width:700px" src='./resources/table1.jpeg'></center></p>
+    <p><center><img style="width:700px" src='./resources/comparison.jpg'></center></p>
     <p>
       In the table ``FM'' represents the fusion module and ``KE'' represents the knowledge enhancement strategy. We report the results on Head/Medium/Tail class sets separately.
     </p>
@@ -407,23 +407,60 @@ The data covers 5,568 different disorders, that have been manually mapped into 9
     <p style="font-weight: bold; font-size: large;">
       R2: ROC curves on Disorders and ICD-10-CM.
     </p>
-    <p><center><img style="width:700px" src='./resources/table2.jpeg'></center></p>
+    <p><center><img style="width:700px" src='./resources/ROCs.png'></center></p>
     <p>
       As depicts in ROC curves above, the shadow in the figure shown the 95% CI (Confidence interval) and FM, KE are short for Fusion Module and Knowledge Enhancement.
     </p>
 
     <!-- <br> -->
     <p style="font-weight: bold; font-size: large;">
-      R3: The AUC Score Comparison on Various External Datasets.
+      R3: Zero-shot results on 6 external datasets.
     </p>
-    <p><center><img style="width:700px" src='./resources/table3.jpeg'></center></p>
+    <p><center><img style="width:700px" src='./resources/zeroshot.jpg'></center></p>
     <p>
-      For each dataset, we carry out experiments with different training data portions, denoted as 1% to 100% in the table. 
-      For example, 30% represents we use 30% of data in the downstream training set for finetuning our model or training from scratch. 
-      ``SOTA'' denotes the best performance of former works (pointed with corresponding reference) on the datasets and 
-      ``Zero-shot'' denotes directly evaluate our model on external datasets. 
-      We mark the gap between ours and training from screatch on the subscript of uparrows in the table.
+      We also conduct zero-shot evaluation on fine-grained diagnosis tasks introduced by
+      each representative external datasets, spanning six anatomies, including the head and neck, chest, breast,
+      abdomen and pelvis, and spine. These datasets cover five modalities, i.e., CT, MRI, X-ray, Ultrasound, and
+      Mammography, allowing for a comprehensive evaluation of our model's capabilities. As baselines, we have
+      included RadIN and BiomedCLIP for comparison in the zero-shot setting.
     </p>
+
+    <!-- <br> -->
+    <p style="font-weight: bold; font-size: large;">
+      R4: Finetune results on various external datasets.
+    </p>
+    <p><center><img style="width:700px" src='./resources/finetune.jpg'></center></p>
+    <p>
+      while finetuning our model on external datasets, we see significant
+      performance improvement on all 22 external datasets with different data portions, compared to models trained from scratch. In most cases, our model can even surpass the specialist SOTAs which are designed carefully
+      for the targeting task, demonstrating that publicly shared medical data on the Internet is a tremendous and
+      valuable resource that can serve as a superior large-scale supervised training dataset for the medical domain.
+    </p>
+
+    <!-- <br> -->
+    <p style="font-weight: bold; font-size: large;">
+      R5: Analysis on normal/abnormal diagnosis.
+    </p>
+    <p><center><img style="width:700px" src='./resources/NormalVisulization_adjust.png'></center></p>
+    <p>
+      We directly adopt
+      the “normal” classifier head trained on our RP3D-DiagDS to obtain the prediction probability score and
+      compare it with other foundation models, RadIN [53] and BiomedCLIP [ 82], in terms of AUC and AP on the
+      five zero-shot datasets.
+    </p>
+
+    <!-- <br> -->
+    <p style="font-weight: bold; font-size: large;">
+      R6: Probability distribution and saliency map visualization
+    </p>
+    <p><center><img style="width:700px" src='./resources/Visualization_Adjust.png'></center></p>
+    <p>
+      we pick a total of six diseases, where we demonstrate the prediction probability
+      distribution on cases in the test set for a certain class. We utilize Score-CAM, a visual explanation method based on class activation maps,
+      to visualize the areas that contribute more to make a decision on the target disease class.
+    </p>
+
+
 
     <p>For more detailed ablation studies and results, please refer to our <a href="https://arxiv.org/abs/2312.16151"> paper</a>.</p>
 
