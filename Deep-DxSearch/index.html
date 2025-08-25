@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep-DxSearch: End-to-End Agentic RAG System for Medical Diagnosis</title>
+    <link rel="icon" type="image/png" href="./resources/Logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #ffffff;
+        }
+
+        /* Hero Section with Background Image */
+        .hero.is-large {
+            position: relative;
+            min-height: 120vh; /* 增加高度确保完整显示 */
+            overflow: hidden;
+            background-color: #f8f9fa;
+        }
+
+        .hero.is-large::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('./resources/teaser_3.png');
+            background-position: center 10%; /* 调整位置确保完整显示 */
+            background-size: 80% auto; /* 稍微缩小确保完整显示 */
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            transform: translateY(0%);
+            transition: filter 0.3s ease, transform 0.3s ease;
+            z-index: 1;
+        }
+
+        .hero.is-large::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 70%; /* 增加渐变覆盖范围 */
+            background: linear-gradient(to top, rgba(255, 255, 255, 1) 40%, rgba(255, 255, 255, 0.8) 70%, rgba(255, 255, 255, 0));
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .hero-body {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            align-items: flex-end;
+            min-height: 120vh;
+            padding-top: 40vh; /* 为teaser图片留出空间 */
+            padding-bottom: 2rem; /* 减少底部间距 */
+        }
+
+        /* Fixed Header */
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            padding: 1rem 0;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .fixed-header.show {
+            transform: translateY(0);
+        }
+
+        .fixed-header .fixed-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Logo */
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .title-logo {
+            width: 100px;
+            height: 100px;
+            opacity: 1; /* 初始时可见 */
+            transition: opacity 0.3s ease;
+            border-radius: 12px; /* 添加圆角 */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* 添加阴影 */
+        }
+
+        /* Publication Title */
+        .publication-title {
+            transition: color 0.3s ease;
+            color: transparent; /* 初始时完全透明 */
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .subtitle-text {
+            font-size: 2.2rem;
+            font-weight: 400;
+            color: rgba(44, 62, 80, 1); /* 初始时可见 */
+            transition: color 0.3s ease;
+            text-align: center;
+            margin-bottom: 30px;
+            line-height: 1.3;
+        }
+
+        /* Action Buttons */
+        .publication-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            opacity: 1; /* 初始时可见 */
+            transition: opacity 0.3s ease;
+        }
+
+        .external-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 25px;
+            background: #2c3e50;
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(44, 62, 80, 0.2);
+            font-size: 0.95rem;
+        }
+
+        .external-link:hover {
+            background: #34495e;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(44, 62, 80, 0.3);
+            color: white;
+        }
+
+        .external-link.arxiv {
+            background: #b31b1b;
+            box-shadow: 0 4px 15px rgba(179, 27, 27, 0.2);
+        }
+
+        .external-link.arxiv:hover {
+            background: #a11818;
+            box-shadow: 0 6px 20px rgba(179, 27, 27, 0.3);
+        }
+
+        .external-link.huggingface {
+            background: #ff6b35;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.2);
+        }
+
+        .external-link.huggingface:hover {
+            background: #e55a2b;
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .icon {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        /* Authors */
+        .publication-authors {
+            text-align: center;
+            margin-bottom: 15px; /* 减少间距 */
+            color: #3498db; /* 修改为蓝色 */
+            font-size: 1.1rem;
+            opacity: 1; /* 初始时可见 */
+            transition: opacity 0.3s ease;
+        }
+
+        .author-block a {
+            color: #3498db; /* 修改为蓝色 */
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .author-block a:hover {
+            color: #2980b9; /* 悬停时稍深的蓝色 */
+        }
+
+        /* 机构信息保持灰色 */
+        .publication-authors#affiliations {
+            color: #666; /* 机构信息保持灰色 */
+        }
+
+        /* 第二个teaser section */
+        .teaser-section {
+            padding: 30px 0; /* 减少上下间距 */
+            text-align: center;
+            background: #ffffff;
+        }
+
+        .teaser-image {
+            width: 100%;
+            max-width: 900px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            margin: 0 auto;
+        }
+
+        /* Content Sections */
+        .section {
+            padding: 60px 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 40px;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        .content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .content.has-text-justified {
+            text-align: justify;
+        }
+
+        .content.has-text-centered {
+            text-align: center;
+        }
+
+        /* Abstract Section */
+        .abstract-section {
+            background: #f8f9fa;
+            padding: 60px 0;
+        }
+
+        /* Highlight boxes */
+        .highlight {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            font-weight: 500;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        /* Images */
+        .result-image {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            margin: 30px auto;
+            display: block;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        /* Limitations Section */
+        .limitations-section {
+            background: #ffffff;
+            padding: 60px 0;
+        }
+
+        .limitations-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 40px 0;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+            align-items: start;
+        }
+
+        .limitation-item {
+            text-align: left;
+        }
+
+        .limitation-gif {
+            width: 100%;
+            height: 300px;
+            object-fit: contain;
+            object-position: center top;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            background: #f8f9fa;
+        }
+
+        .limitation-text {
+            font-size: 1rem;
+            color: #666;
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        /* Solution Section */
+        .solution-section {
+            background: #f8f9fa;
+            text-align: center;
+            padding: 60px 0;
+        }
+
+        .solution-gif {
+            width: 100%;
+            max-width: 700px;
+            height: auto;
+            border-radius: 15px;
+            margin: 30px auto;
+            display: block;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+
+        /* Contributions Section */
+        .contributions-section {
+            background: #ffffff;
+            padding: 60px 0;
+        }
+
+        /* Results Section */
+        .results-section {
+            background: #f8f9fa;
+            padding: 60px 0;
+        }
+
+        /* Conclusion Section */
+        .conclusion-section {
+            background: #ffffff;
+            padding: 60px 0;
+        }
+
+        /* Citation Section */
+        .citation-section {
+            background: #f8f9fa;
+            padding: 60px 0;
+        }
+
+        .citation-box {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 30px;
+            border-radius: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin: 0 auto;
+            max-width: 800px;
+            white-space: pre-line;
+            overflow-x: auto;
+        }
+
+        .citation-title {
+            color: #74b9ff;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-family: 'Google Sans', sans-serif;
+        }
+
+        /* Footer */
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 50px 0;
+            margin-top: 0;
+        }
+
+        .footer a {
+            color: #74b9ff;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: #0984e3;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .publication-title {
+                font-size: 2.5rem;
+            }
+
+            .subtitle-text {
+                font-size: 1.6rem;
+            }
+
+            .hero.is-large {
+                min-height: 100vh;
+            }
+
+            .hero-body {
+                min-height: 100vh;
+                padding-top: 30vh;
+            }
+
+            .hero.is-large::before {
+                background-size: 90% auto;
+                background-position: center 5%;
+            }
+
+            .teaser-section {
+                padding: 20px 0;
+            }
+
+            .limitations-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .limitation-gif {
+                height: 250px;
+            }
+
+            .publication-links {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .external-link {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .container {
+                padding: 0 15px;
+            }
+
+            .section {
+                padding: 40px 0;
+            }
+
+            .citation-box {
+                font-size: 0.8rem;
+                padding: 20px;
+            }
+        }
+
+        /* Animation classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed Header -->
+    <div class="fixed-header" id="fixedHeader">
+        <div class="container">
+            <div class="fixed-title">Deep-DxSearch</div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero is-large" id="hero">
+        <div class="hero-body">
+            <div class="container">
+                <div class="logo-container">
+                    <img src="./resources/Logo.png" alt="Deep-DxSearch Logo" class="title-logo" id="titleLogo">
+                </div>
+                
+                <h1 class="publication-title" id="mainTitle">
+                    <strong>Deep-DxSearch</strong>
+                </h1>
+                
+                <div class="subtitle-text" id="subtitle">
+                    End-to-End Agentic RAG System Training for Traceable Diagnostic Reasoning
+                </div>
+                
+                <div class="publication-links" id="actionButtons">
+                    <a href="https://arxiv.org/abs/2508.15746" class="external-link arxiv" target="_blank">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M7 5a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H7zM3 8a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8z"/>
+                            <path d="M9 10a1 1 0 0 1 1-1h4a1 1 0 1 1 0 2h-4a1 1 0 0 1-1-1z"/>
+                            <path d="M9 14a1 1 0 0 1 1-1h4a1 1 0 1 1 0 2h-4a1 1 0 0 1-1-1z"/>
+                        </svg>
+                        ArXiv Paper
+                    </a>
+                    <a href="https://github.com/MAGIC-AI4Med/Deep-DxSearch" class="external-link" target="_blank">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        Code Repo
+                    </a>
+                    <a href="https://huggingface.co/collections/QiaoyuZheng/diagrl-689b383c58d63395263de834" class="external-link huggingface" target="_blank">
+                        🤗 Model & Data
+                    </a>
+                </div>
+                
+                <div class="publication-authors" id="authors">
+                    <span class="author-block">
+                        <a href="https://qiaoyu-zheng.github.io/">Qiaoyu Zheng</a><sup>1,2</sup>, 
+                        <a href="https://github.com/Sekiro-Sun">Yuze Sun</a><sup>1</sup>, 
+                        <a href="https://chaoyi-wu.github.io/">Chaoyi Wu</a><sup>1</sup>, 
+                        <a href="https://angelakeke.github.io/">Weike Zhao</a><sup>1,2</sup>, 
+                        <a href="https://henrychur.github.io/">Pengcheng Qiu</a><sup>1,2</sup>, 
+                        <a href="https://www.shsmu.edu.cn/ekxy-en/info/1054/1402.htm">Yongguo Yu</a><sup>3</sup>, 
+                        <a href="https://www.shsmu.edu.cn/english/info/1354/4178.htm"></a>Kun Sun<sup>3</sup>, 
+                        <a href="https://scholar.google.com/citations?user=x_sgJskAAAAJ&hl=zh-CN"></a>Wang<sup>1,2</sup>, 
+                        <a href="https://scholar.google.com/citations?user=pbjw9sMAAAAJ&hl=zh-CN">Ya Zhang</a><sup>†,1,2</sup>, 
+                        <a href="https://weidixie.github.io/">Weidi Xie</a><sup>†,1,2</sup>
+                    </span>
+                </div>
+                
+                <div class="publication-authors" id="affiliations">
+                    <span class="author-block">
+                        <sup>1</sup>Shanghai Jiao Tong University &nbsp;&nbsp;
+                        <sup>2</sup>Shanghai AI Laboratory &nbsp;&nbsp;
+                        <sup>3</sup>Xinhua Hospital Affiliated to Shanghai Jiao Tong University School of Medicine
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Teaser Section - 第二个teaser -->
+    <section class="teaser-section">
+        <div class="container">
+            <img src="./resources/teaser_3.gif" alt="Deep-DxSearch Overview" class="teaser-image">
+        </div>
+    </section>
+
+    <!-- Abstract Section -->
+    <section class="abstract-section" id="abstract">
+        <div class="container">
+            <div class="fade-in">
+                <h2 class="section-title">Abstract</h2>
+                <div class="content has-text-justified">
+                    <p>
+                        Accurate diagnosis remains a central challenge for medical large language models due to inherent knowledge limitations and hallucinations. While retrieval-augmented generation (RAG) and tool-augmented agentic methods show potential in mitigating these issues, their suboptimal utilization of external knowledge and the decoupling of the feedback-reasoning traceability, stemming from insufficient supervision, remain key limitations.
+                    </p>
+                    
+                    <div class="highlight">
+                        <strong>We introduce Deep-DxSearch, an agentic RAG system trained end-to-end with reinforcement learning (RL) that enables traceable retrieval‑augmented reasoning for medical diagnosis.</strong>
+                    </div>
+                    
+                    <p>
+                        Experiments demonstrate that our end-to-end agentic RL training framework consistently outperforms prompt‑engineering and training‑free RAG approaches across multiple data centers. After training, Deep-DxSearch achieves substantial gains in diagnostic accuracy, surpassing strong diagnostic baselines such as GPT‑4o, DeepSeek‑R1, and other medical‑specific frameworks for both common and rare disease diagnosis.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Current Limitations Section -->
+    <section class="limitations-section" id="limitations">
+        <div class="container">
+            <div class="fade-in">
+                <h2 class="section-title">Current Limitations in Diagnostic RAG</h2>
+                <div class="limitations-grid">
+                    <div class="limitation-item">
+                        <img src="./resources/teaser_1.gif" alt="Limitation 1" class="limitation-gif">
+                        <p class="limitation-text">LLMs do not know how to effectively retrieve from large-scale, complex and long-tailed real-world medical corpus.</p>
+                    </div>
+                    <div class="limitation-item">
+                        <img src="./resources/teaser_2.gif" alt="Limitation 2" class="limitation-gif">
+                        <p class="limitation-text">Follow rigid inference-only workflows and depend on manually defined query, that lack adaptive mechanisms to incorporate retrieval feedback and reasoning.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Solution Section -->
+    <section class="solution-section" id="solution">
+        <div class="container">
+            <div class="fade-in">
+                <h2 class="section-title">Our Solution</h2>
+                <div class="content has-text-centered">
+                    <div class="highlight">
+                        We present Deep-DxSearch, an end-to-end trained agentic RAG system for traceable diagnostic reasoning. We aim to supervise the model to learn how to orchestrate retrieval-reasoning during diagnosis.
+                    </div>
+                    <img src="./resources/workflow.gif" alt="Workflow" class="solution-gif">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Contributions Section -->
+    <section class="contributions-section" id="contributions">
+        <div class="container">
+            <div class="fade-in">
+                <h2 class="section-title">Key Contributions</h2>
+                <div class="content has-text-justified">
+                    <p><strong>Comprehensive Medical Retrieval Corpus:</strong> We build the most comprehensive medical diagnostic retrieval corpus to date, integrating patient records, clinical guidelines, and general medical knowledge, forming the foundation for diagnostic agentic RAG.</p>
+                    
+                    <img src="./resources/retrieval_corpus.png" alt="Retrieval Corpus" class="result-image">
+                    
+                    <p><strong>End-to-End RL Training:</strong> Treating the LLM as the agentic core and the corpus as the environment, we conduct end-to-end RL training to optimize the RAG policy. We design soft verifiable rewards that guide both reasoning steps and final diagnoses.</p>
+                    
+                    <img src="./resources/grpo.png" alt="GRPO Training" class="result-image">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Evaluation Results Section -->
+    <section class="results-section" id="results">
+        <div class="container">
+            <div class="fade-in">
+                <h2 class="section-title">Evaluation Results</h2>
+                <div class="content has-text-justified">
+                    <div class="highlight">
+                        Results demonstrate that our agentic RL training approach substantially boosts diagnostic accuracy from 34.70% to 70.48%. Deep-DxSearch significantly surpasses the previous RAG design powered by GPT-4o by 23.62% in rare disease diagnosis.
+                    </div>
+                    
+                    <img src="./resources/results.png" alt="Results" class="result-image">
+                    
+                    <p>In comparative studies with eight state-of-the-art methods, Deep-DxSearch significantly surpasses the previous RAG design powered by the most powerful commercial LLM, GPT-4o, by 23.62% in rare disease diagnosis, even though our agentic LLM is much smaller.</p>
+                    
+                    <p>Ablation studies highlight two key aspects: the effectiveness of our reward design and the contribution of our curated retrieval corpus. Our reward designed for co-optimization of retrieval and reasoning policies yields a 17% improvement in top-1 accuracy for common diseases and 22% for rare diseases, outperforming a target-only supervision scheme.</p>
+                    
+                    <img src="./resources/ablation_interpretability.png" alt="Ablation Study" class="result-image">
+                    
+                    <p>Interpretability analysis of the learned RAG policy further quantifies how agents evolve during training across three critical dimensions: retrieval relevance, differential diagnosis, and irrelevance exclusion.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conclusion Section -->
+    <section class="conclusion-section" id="conclusion">
+        <div class="container">
+            <div class="fade-in">
+                <h2 class="section-title">Conclusion</h2>
+                <div class="content has-text-justified">
+                    <p>As highlighted in the well-known <strong>"Bitter Lesson"</strong> of AI research: <em>while human knowledge and handcrafted strategies may offer short-term gains, long-term advances depend on exploiting statistical regularities from large-scale data.</em></p>
+                    
+                    <div class="highlight">
+                        We believe that current training-free agentic AI designs are undergoing an "agentic version" of this "Bitter Lesson". As a concrete step in traceable diagnostic reasoning, our Deep-DxSearch demonstrates how current agentic systems can be evolved by unlocking the power of large-scale healthcare data.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Citation Section -->
+    <section class="citation-section" id="citation">
+        <div class="container">
+            <div class="fade-in">
+                <h2 class="section-title">Citation</h2>
+                <div class="citation-box">
+                    <div class="citation-title">BibTeX</div>@article{zheng2025end,
+  title={End-to-End Agentic RAG System Training for Traceable Diagnostic Reasoning},
+  author={Zheng, Qiaoyu and Sun, Yuze and Wu, Chaoyi and Zhao, Weike and Qiu, Pengcheng and Yu, Yongguo and Sun, Kun and Wang, Yanfeng and Zhang, Ya and Xie, Weidi},
+  journal={arXiv preprint arXiv:2508.15746},
+  year={2025}
+}</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 MAGIC-AI4Med Team. All data, code, and checkpoints are available at <a href="https://github.com/MAGIC-AI4Med/Deep-DxSearch">GitHub</a></p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hero = document.querySelector('.hero.is-large');
+            const mainTitle = document.getElementById('mainTitle');
+            const fixedHeader = document.getElementById('fixedHeader');
+            
+            window.addEventListener('scroll', function() {
+                const scrolled = window.pageYOffset;
+                const heroHeight = hero.offsetHeight;
+                const scrollPercent = Math.min(scrolled / heroHeight, 1);
+                
+                // Background image effects - 保持隐现效果
+                const scale = 1 + scrollPercent * 0.2;
+                const blur = scrollPercent * 15;
+                
+                // Update background with dynamic styles
+                const style = document.createElement('style');
+                style.textContent = `
+                    .hero.is-large::before {
+                        transform: translateY(0%) scale(${scale}) !important;
+                        filter: blur(${blur}px) !important;
+                    }
+                `;
+                
+                const existingStyle = document.querySelector('#dynamic-hero-style');
+                if (existingStyle) {
+                    existingStyle.remove();
+                }
+                
+                style.id = 'dynamic-hero-style';
+                document.head.appendChild(style);
+                
+                // Deep-DxSearch标题在滚动时渐现（从滚动15%开始）
+                const titleAlpha = Math.max(0, Math.min(1, (scrollPercent - 0.15) * 4));
+                const titleColor = `rgba(44, 62, 80, ${titleAlpha})`;
+                mainTitle.style.color = titleColor;
+                
+                // Show fixed header at 50% scroll
+                if (scrollPercent > 0.5) {
+                    fixedHeader.classList.add('show');
+                } else {
+                    fixedHeader.classList.remove('show');
+                }
+            });
+            
+            // Intersection Observer for fade-in animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.fade-in').forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
